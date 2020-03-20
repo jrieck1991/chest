@@ -93,7 +93,6 @@ impl Client {
             Ok(n) => println!("{} bytes written to tcp stream", n),
             Err(e) => return Err(e),
         };
-        stream.flush();
 
         Ok(())
     }
