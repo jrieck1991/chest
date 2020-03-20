@@ -1,0 +1,18 @@
+[package]
+name = "chest"
+version = "0.1.0"
+authors = ["jrieck <jackdrieck@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bytes = "0.5"
+
+[[bin]]
+name = "client"
+path = "src/client.rs"
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
