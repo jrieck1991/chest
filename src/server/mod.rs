@@ -46,46 +46,42 @@ impl Server {
 // handle will own and operate the tcp connection
 fn handle(mut stream: TcpStream) {
 
-    // continually loop and read from tcp stream
-    loop {
+    // init 1024 byte buffer
+    let mut buf = BytesMut::with_capacity(1024);
 
-        // init 1024 byte buffer
-        let mut buf = BytesMut::with_capacity(1024);
+    // read from tcp stream
+    let _n = match stream.read(&mut buf) {
+        Ok(n) => println!("{} bytes read from tcp stream", n),
+        Err(e) => println!("error reading from stream: {}", e),
+    };
 
-        // read from tcp stream
-        let _n = match stream.read(&mut buf) {
-            Ok(n) => println!("{} bytes read from tcp stream", n),
-            Err(e) => println!("error reading from stream: {}", e),
-        };
+    // iterate over buffer
+    for (i, x) in buf.into_iter().enumerate() {
 
-        // iterate over buffer
-        for (i, x) in buf.into_iter().enumerate() {
+        // match starting byte
+        if i == 0 {
 
-            // match starting byte
-            if i == 0 {
-
-                // continue onto payload
-                if x == b"S"[0] {
-                    println!("START hit, beginning");
-                    continue
-                }
-
-                // malformed request
-                break
+            // continue onto payload
+            if x == b"S"[0] {
+                println!("START hit, beginning");
+                continue
             }
 
-            // match ending byte
-            // exit buffer
-            if x == b"E"[0] {
-                println!("EOF Hit, exiting");
-                break
-            }
+            // malformed request
+            break
+        }
+
+        // match ending byte
+        // exit buffer
+        if x == b"E"[0] {
+            println!("EOF Hit, exiting");
+            break
         }
     }
 }
 
 #[derive(Debug)]
-struct Client {}
+pub struct Client {}
 
 impl Client {
 
@@ -93,7 +89,7 @@ impl Client {
         Client{}
     }
 
-    pub fn send(payload: String, addr: String) -> Result<(), Error> {
+    pub fn send(self: &Self, payload: String, addr: String) -> Result<(), Error> {
 
         // connect to server
         let mut stream = match TcpStream::connect(addr) {
@@ -105,15 +101,16 @@ impl Client {
         let mut buf = BytesMut::with_capacity(1024);
 
         // form payload
-        buf.put(&b"magic-byte"[..]);
+        buf.put(&b"S"[..]);
         buf.put(&payload.as_bytes()[..]);
-        buf.put(&b"eof"[..]);
+        buf.put(&b"E"[..]);
 
         // write buffer to tcp connection
         let _n = match stream.write(&buf) {
-            Ok(n) => n,
+            Ok(n) => println!("{} bytes written to tcp stream", n),
             Err(e) => return Err(e),
         };
+        stream.flush();
 
         Ok(())
     }
