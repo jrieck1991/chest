@@ -2,6 +2,8 @@ use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write, Error};
 use std::convert::TryInto;
 
+use bytes::{BytesMut, BufMut};
+
 mod storage;
 
 #[derive(Debug)]
@@ -63,7 +65,7 @@ fn handle(mut stream: TcpStream) {
     };
 
     // buffer to read data size in bytes
-    let mut len_buf = [0; 4];
+    let mut len_buf = [0; 8];
 
     // read data length from tcp stream
     let _n = match stream.read(&mut len_buf[..]) {
@@ -72,13 +74,13 @@ fn handle(mut stream: TcpStream) {
     };
 
     // convert bytes to u32
-    let data_len = u32::from_be_bytes(len_buf);
+    let data_len = usize::from_be_bytes(len_buf);
 
     // buffer to read data of length given by len_buf
-    let mut data_buf = Vec::with_capacity(data_len.try_into().unwrap());
+    let mut data_buf = vec![0; data_len];
 
     // read data length from tcp stream
-    let _n = match stream.read(&mut data_buf[..]) {
+    let _n = match stream.read(&mut data_buf) {
         Ok(n) => println!("{} bytes read from tcp stream", n),
         Err(e) => println!("error reading from stream: {}", e),
     };
@@ -114,20 +116,14 @@ impl Client {
 
         // data length 
         let data_len = data.as_bytes().len();
-        println!("{:?}", data_len.to_be_bytes());
 
+        // add data length bytes
         for (i, x) in data_len.to_be_bytes().iter().enumerate() {
-
-            // data len will always be 8 bytes but we need to shave off
-            // first 4 bytes because of server side buffer constraints
-            if i <= 3 {
-                println!("skipping {}", i);
-                continue
-            };
 
             buf.push(*x);
         }
 
+        // add data
         for (i, x) in data.as_bytes().into_iter().enumerate() {
             buf.push(*x);
         }
