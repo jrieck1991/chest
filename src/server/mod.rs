@@ -1,6 +1,6 @@
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write, Error};
-use bytes::{BytesMut, BufMut};
+use std::convert::TryInto;
 
 mod storage;
 
@@ -46,18 +46,45 @@ impl Server {
 // handle will own and operate the tcp connection
 fn handle(mut stream: TcpStream) {
 
-    // init 1024 byte buffer
-    let mut buf = [0; 11];
+    // buffer to read tag
+    let mut tag_buf = [0; 1];
 
-    // read from tcp stream
-    let _n = match stream.read(&mut buf[..]) {
+    // read tag from tcp stream
+    let _n = match stream.read(&mut tag_buf[..]) {
+        Ok(n) => println!("{} bytes read from tcp stream", n),
+        Err(e) => println!("error reading from stream: {}", e),
+    };
+
+    // match tag
+    if tag_buf[0] != 99 {
+        println!("invalid tag, exiting stream");
+        return
+    };
+
+    // buffer to read data size in bytes
+    let mut len_buf = [0; 4];
+
+    // read data length from tcp stream
+    let _n = match stream.read(&mut len_buf[..]) {
+        Ok(n) => println!("{} bytes read from tcp stream", n),
+        Err(e) => println!("error reading from stream: {}", e),
+    };
+
+    // convert bytes to u32
+    let data_len = u32::from_be_bytes(len_buf);
+
+    // buffer to read data of length given by len_buf
+    let mut data_buf = Vec::with_capacity(data_len.try_into().unwrap());
+
+    // read data length from tcp stream
+    let _n = match stream.read(&mut data_buf[..]) {
         Ok(n) => println!("{} bytes read from tcp stream", n),
         Err(e) => println!("error reading from stream: {}", e),
     };
 
     // iterate over buffer
-    for (i, x) in buf.into_iter().enumerate() {
-        println!("BUF ITER");
+    for (i, x) in data_buf.into_iter().enumerate() {
+        println!("data byte: {}", x)
     }
 }
 
