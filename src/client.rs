@@ -3,7 +3,7 @@ mod server;
 fn main() {
     let c = server::Client::new();
 
-    let result = match c.send(
+    let _result = match c.send(
         String::from("adkoghjssjdfhgjkghdsgdgd"),
         String::from("127.0.0.1:6000"),
     ) {
