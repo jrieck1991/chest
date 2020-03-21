@@ -56,8 +56,9 @@ fn handle(mut stream: TcpStream) {
     };
 
     // match tag
-    if tag_buf[0] != 99 {
-        println!("invalid tag, exiting stream");
+    // 48 == b"0"
+    if tag_buf[0] != 48 {
+        println!("invalid tag {}", tag_buf[0]);
         return
     };
 
@@ -108,9 +109,25 @@ impl Client {
         // create buffer
         let mut buf: Vec<u8> = Vec::new();
 
-        // form data
-        buf.push(b"S"[0]);
-        buf.push(b"E"[0]);
+        // tag == u32 48
+        buf.push(b"0"[0]);
+
+        // data length 
+        let data_len = data.as_bytes().len();
+        println!("{:?}", data_len.to_be_bytes());
+
+        for (i, x) in data_len.to_be_bytes().iter().enumerate() {
+
+            // data len will always be 8 bytes but we need to shave off
+            // first 4 bytes because of server side buffer constraints
+            if i <= 3 {
+                println!("skipping {}", i);
+                continue
+            };
+
+            buf.push(*x);
+        }
+
         for (i, x) in data.as_bytes().into_iter().enumerate() {
             buf.push(*x);
         }

@@ -4,7 +4,7 @@ fn main() {
 
     let c = server::Client::new();
 
-    let result = match c.send(String::from("sdkoghjsd"), String::from("127.0.0.1:6000")) {
+    let result = match c.send(String::from("adkoghjsd"), String::from("127.0.0.1:6000")) {
         Ok(()) => println!("data sent successfully"),
         Err(e) => panic!("client.send err: {}", e),
     };
