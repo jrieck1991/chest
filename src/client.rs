@@ -1,5 +1,5 @@
 use std::io::{Error, Write};
-use std::net::{TcpStream};
+use std::net::TcpStream;
 
 mod storage;
 
@@ -7,7 +7,6 @@ mod storage;
 pub struct Client {}
 
 impl Client {
-
     pub fn new() -> Client {
         Client {}
     }

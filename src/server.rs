@@ -1,26 +1,16 @@
 use std::io::{Error, Read, Write};
 use std::net::{TcpListener, TcpStream};
 
-
-
-mod storage;
-
 #[derive(Debug)]
 pub struct Server {
     addr: String,
-    client: Client,
-    store: storage::Storage,
 }
 
 // Server handles TCP connections
 impl Server {
     // new creates a new tcp server
     pub fn new(a: String) -> Server {
-        Server {
-            addr: a,
-            client: Client::new(),
-            store: storage::Storage::new(),
-        }
+        Server { addr: a }
     }
 
     // start binds listener to socket
