@@ -1,7 +1,7 @@
 use std::io::{Error, Read, Write};
 use std::net::{TcpListener, TcpStream};
 
-use bytes::{BufMut, BytesMut};
+
 
 mod storage;
 
@@ -82,7 +82,7 @@ fn handle(mut stream: TcpStream) {
     // TODO: send to storage here instead of printing
 
     // iterate over buffer
-    for (i, x) in data_buf.into_iter().enumerate() {
+    for (_i, x) in data_buf.into_iter().enumerate() {
         println!("data byte: {}", x)
     }
 }
@@ -112,12 +112,12 @@ impl Client {
         let data_len = data.as_bytes().len();
 
         // add data length bytes
-        for (i, x) in data_len.to_be_bytes().iter().enumerate() {
+        for (_i, x) in data_len.to_be_bytes().iter().enumerate() {
             buf.push(*x);
         }
 
         // add data
-        for (i, x) in data.as_bytes().into_iter().enumerate() {
+        for (_i, x) in data.as_bytes().into_iter().enumerate() {
             buf.push(*x);
         }
 
@@ -133,7 +133,7 @@ impl Client {
 
 mod tests {
 
-    use super::*;
+    
 
     #[test]
     fn server_new() {
