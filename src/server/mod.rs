@@ -133,7 +133,7 @@ impl Client {
 
 mod tests {
 
-    
+    use super::*;
 
     #[test]
     fn server_new() {

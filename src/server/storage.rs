@@ -42,7 +42,7 @@ impl Storage {
 
 mod tests {
 
-    
+    use super::*;
 
     #[test]
     fn set_get_rm() {
