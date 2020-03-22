@@ -91,6 +91,7 @@ fn handle(mut stream: TcpStream) {
 pub struct Client {}
 
 impl Client {
+
     pub fn new() -> Client {
         Client {}
     }
