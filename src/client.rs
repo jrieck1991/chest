@@ -1,8 +1,6 @@
 use std::io::{Error, Write};
 use std::net::TcpStream;
 
-mod storage;
-
 #[derive(Debug)]
 pub struct Client {}
 
