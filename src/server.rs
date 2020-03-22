@@ -1,4 +1,4 @@
-use std::io::{Error, Read, Write};
+use std::io::{Error, Read};
 use std::net::{TcpListener, TcpStream};
 
 #[derive(Debug)]
