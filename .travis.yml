@@ -3,5 +3,3 @@ rust:
   - stable
 script:
   - cargo test --verbose
-jobs:
-  fast_finish: true
