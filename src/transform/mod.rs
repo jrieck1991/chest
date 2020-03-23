@@ -14,7 +14,7 @@ impl Transform {
         }
     }
 
-    pub fn encode_map(self &Self, HashMap<String, String>) {
+    pub fn encode_map(self &Self, HashMap<String, String>) -> Vec<u8> {
 
         let data_len = data.as_bytes().len();
 
@@ -33,6 +33,8 @@ impl Transform {
         for d in data.to_be_bytes().iter() {
             buf.push(*d);
         }
+
+        return buf;
     }
 
     pub fn decode_map(self: &Self, mut stream: TcpStream, HashMap<String, String>) {
