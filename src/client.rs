@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::io::{Error, Write};
 use std::net::TcpStream;
+use std::{thread, time};
 
 #[derive(Debug)]
 pub struct Client {}
@@ -63,17 +64,22 @@ impl Client {
 fn main() {
     let c = Client::new();
 
-    let mut data: HashMap<Vec<u8>, Vec<u8>> = HashMap::new();
+    loop {
 
-    let key: Vec<u8> = vec![123, 142, 123, 1];
-    let val: Vec<u8> = vec![9, b"A"[0], 23, 6];
+        let mut data: HashMap<Vec<u8>, Vec<u8>> = HashMap::new();
 
-    data.insert(key, val);
+        let key: Vec<u8> = vec![123, 142, 123, 1];
+        let val: Vec<u8> = vec![9, b"A"[0], 23, 6];
 
-    let _res = match c.send(String::from("localhost:6000"), data) {
-        Ok(_res) => println!("send successful"),
-        Err(e) => println!("error sending: {}", e),
-    };
+        data.insert(key, val);
+
+        let _res = match c.send(String::from("localhost:6000"), data) {
+            Ok(_res) => println!("send successful"),
+            Err(_e) => break,
+        };
+
+        thread::sleep(time::Duration::from_millis(1000));
+    }
 }
 
 mod tests {
