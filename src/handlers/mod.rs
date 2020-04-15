@@ -1,4 +1,4 @@
-use std::io::{Error, Read};
+use std::io::{Error};
 use std::net::{TcpListener, TcpStream};
 
 mod transform;
@@ -40,7 +40,7 @@ fn handle(stream: TcpStream) {
 
 mod tests {
 
-    use super::*;
+    use super::*; 
 
     #[test]
     fn server_new() {

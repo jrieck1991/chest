@@ -28,7 +28,7 @@ impl Client {
         buf.push(b"0"[0]);
 
         // iterate over map to fill buffer
-        for (k, v) in data_map.iter() {
+        for (k, _v) in data_map.iter() {
             // add key len bytes
             for (_i, x) in k.len().to_be_bytes().iter().enumerate() {
                 buf.push(*x);
@@ -70,15 +70,15 @@ fn main() {
 
     data.insert(key, val);
 
-    let res = match c.send(String::from("localhost:6000"), data) {
-        Ok(res) => println!("send successful"),
+    let _res = match c.send(String::from("localhost:6000"), data) {
+        Ok(_res) => println!("send successful"),
         Err(e) => println!("error sending: {}", e),
     };
 }
 
 mod tests {
 
-    use super::*;
+   use super::*; 
 
     #[test]
     fn client_new() {

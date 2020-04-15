@@ -1,9 +1,9 @@
 use std::collections::HashMap;
-use std::io::{Error, Read};
+use std::io::{Read};
 use std::net::TcpStream;
 
 // read_stream
-pub fn read_stream(mut stream: &TcpStream) -> HashMap<Vec<u8>, String> {
+pub fn read_stream(stream: &TcpStream) -> HashMap<Vec<u8>, String> {
     // verify tag
     if !read_tag(&stream) {
         return HashMap::new();
