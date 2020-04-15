@@ -1,18 +1,20 @@
+use std::collections::HashMap;
 use std::io::{Error, Write};
 use std::net::TcpStream;
-use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Client {}
 
 impl Client {
-
     pub fn new() -> Client {
         Client {}
     }
 
-    pub fn send(self: &Self, addr: String, data_map: HashMap<Vec<u8>, Vec<u8>>) -> Result<(), Error> {
-
+    pub fn send(
+        self: &Self,
+        addr: String,
+        data_map: HashMap<Vec<u8>, Vec<u8>>,
+    ) -> Result<(), Error> {
         // connect to server
         let mut stream = match TcpStream::connect(addr) {
             Ok(stream) => stream,
@@ -27,7 +29,6 @@ impl Client {
 
         // iterate over map to fill buffer
         for (k, v) in data_map.iter() {
-
             // add key len bytes
             for (_i, x) in k.len().to_be_bytes().iter().enumerate() {
                 buf.push(*x);
@@ -47,7 +48,6 @@ impl Client {
             for (_i, x) in k.into_iter().enumerate() {
                 buf.push(*x);
             }
-
         }
 
         // write buffer to tcp connection
@@ -61,7 +61,6 @@ impl Client {
 }
 
 fn main() {
-
     let c = Client::new();
 
     let mut data: HashMap<Vec<u8>, Vec<u8>> = HashMap::new();

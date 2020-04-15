@@ -10,7 +10,6 @@ pub struct Server {
 
 // Server handles TCP connections
 impl Server {
-
     // new creates a new tcp server
     pub fn new(a: String) -> Server {
         Server { addr: a }
@@ -35,7 +34,6 @@ impl Server {
 
 // handle will own and operate the tcp connection
 fn handle(stream: TcpStream) {
-
     let h = transform::read_stream(&stream);
     println!("got map {:?}", h);
 }

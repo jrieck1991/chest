@@ -1,10 +1,9 @@
-use std::net::TcpStream;
 use std::collections::HashMap;
-use std::io::{Read, Error};
+use std::io::{Error, Read};
+use std::net::TcpStream;
 
 // read_stream
 pub fn read_stream(mut stream: &TcpStream) -> HashMap<Vec<u8>, String> {
-
     // verify tag
     if !read_tag(&stream) {
         return HashMap::new();
@@ -19,7 +18,6 @@ pub fn read_stream(mut stream: &TcpStream) -> HashMap<Vec<u8>, String> {
 // read_tag will read and verify the first byte in the stream
 // expected tag hardcoded to b"0"
 fn read_tag(mut stream: &TcpStream) -> bool {
-
     // buffer to read tag
     let mut tag_buf = [0; 1];
 
@@ -33,15 +31,14 @@ fn read_tag(mut stream: &TcpStream) -> bool {
     // 48 == b"0"
     if tag_buf[0] != 48 {
         println!("invalid tag {}", tag_buf[0]);
-        return false
+        return false;
     };
 
-    return true
+    return true;
 }
 
 // get_len of data, return 0 if err
 fn get_len(mut stream: &TcpStream) -> usize {
-
     // 8 byte buffer
     let mut len_buf = [0; 8];
 
@@ -65,17 +62,15 @@ fn get_len(mut stream: &TcpStream) -> usize {
 
 // parse_data returns a hashmap parsed from the stream
 fn parse_data(mut stream: &TcpStream) -> HashMap<Vec<u8>, String> {
-
     // init hashmap
     let mut h = HashMap::new();
 
     loop {
-
         // get len for key data
         let key_len = get_len(&stream);
         if key_len == 0 {
             println!("get_len error");
-            break
+            break;
         };
 
         // buffer to read data of length given by len_buf
@@ -89,10 +84,8 @@ fn parse_data(mut stream: &TcpStream) -> HashMap<Vec<u8>, String> {
 
         h.insert(key_buf, String::from("test_val"));
     }
-    
+
     return h;
 }
 
-mod tests {
-
-}
+mod tests {}
