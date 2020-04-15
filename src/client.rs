@@ -16,6 +16,7 @@ impl Client {
         addr: String,
         data_map: HashMap<Vec<u8>, Vec<u8>>,
     ) -> Result<(), Error> {
+
         // connect to server
         let mut stream = match TcpStream::connect(addr) {
             Ok(stream) => stream,
@@ -29,24 +30,25 @@ impl Client {
         buf.push(b"0"[0]);
 
         // iterate over map to fill buffer
-        for (k, _v) in data_map.iter() {
+        for (k, v) in data_map.iter() {
+
             // add key len bytes
-            for (_i, x) in k.len().to_be_bytes().iter().enumerate() {
+            for x in k.len().to_be_bytes().iter() {
                 buf.push(*x);
             }
 
             // add key
-            for (_i, x) in k.into_iter().enumerate() {
+            for x in k.into_iter() {
                 buf.push(*x);
             }
 
-            // add key len bytes
-            for (_i, x) in k.len().to_be_bytes().iter().enumerate() {
+            // add value len bytes
+            for x in v.len().to_be_bytes().iter() {
                 buf.push(*x);
             }
 
-            // add key
-            for (_i, x) in k.into_iter().enumerate() {
+            // add value
+            for x in v.into_iter() {
                 buf.push(*x);
             }
         }
