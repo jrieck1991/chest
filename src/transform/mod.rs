@@ -37,7 +37,7 @@ impl Transform {
         return buf;
     }
 
-    pub fn decode_map(self: &Self, mut stream: TcpStream, HashMap<String, String>) {
+    pub fn decode_map(self: &Self, mut stream: TcpStream) -> HashMap<String, String> {
 
         // buffer to read tag
         let mut tag_buf = [0; 1];
