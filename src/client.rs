@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::io::{Error, Write};
+use std::io::{Error, Write, Read};
 use std::net::TcpStream;
 use std::{thread, time};
 
@@ -14,7 +14,7 @@ impl Client {
     pub fn send(
         self: &Self,
         addr: String,
-        data_map: HashMap<Vec<u8>, Vec<u8>>,
+        data_map: HashMap<String, String>,
     ) -> Result<(), Error> {
 
         // connect to server
@@ -32,23 +32,27 @@ impl Client {
         // iterate over map to fill buffer
         for (k, v) in data_map.iter() {
 
+            // transform String's into byte slice
+            let kb = k.as_bytes();
+            let vb = v.as_bytes();
+
             // add key len bytes
-            for x in k.len().to_be_bytes().iter() {
+            for x in kb.len().to_be_bytes().iter() {
                 buf.push(*x);
             }
 
             // add key
-            for x in k.into_iter() {
+            for x in kb.into_iter() {
                 buf.push(*x);
             }
 
             // add value len bytes
-            for x in v.len().to_be_bytes().iter() {
+            for x in vb.len().to_be_bytes().iter() {
                 buf.push(*x);
             }
 
             // add value
-            for x in v.into_iter() {
+            for x in vb.into_iter() {
                 buf.push(*x);
             }
         }
@@ -68,10 +72,10 @@ fn main() {
 
     loop {
 
-        let mut data: HashMap<Vec<u8>, Vec<u8>> = HashMap::new();
+        let mut data: HashMap<String, String> = HashMap::new();
 
-        let key: Vec<u8> = vec![123, 142, 123, 1];
-        let val: Vec<u8> = vec![9, b"A"[0], 23, 6];
+        let key = String::from("key_01_test");
+        let val = String::from("val_01_test");
 
         data.insert(key, val);
 
