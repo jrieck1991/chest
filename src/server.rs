@@ -34,13 +34,10 @@ impl Server {
 }
 
 // handle will own and operate the tcp connection
-fn handle(mut stream: TcpStream) {
-    
-    if !transform::read_tag(stream) {
-        return;
-    };
+fn handle(stream: TcpStream) {
 
-    println!("read tag success");
+    let h = transform::read_stream(&stream);
+    println!("got map {:?}", h);
 }
 
 mod tests {
