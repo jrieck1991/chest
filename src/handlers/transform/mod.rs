@@ -54,6 +54,12 @@ fn get_len(mut stream: &TcpStream) -> usize {
     // convert bytes to u32
     let data_len = usize::from_be_bytes(len_buf);
 
+    // max size is 1000
+    if data_len > 1000 {
+        println!("data_len: {}, exceeds max of 1000 bytes", data_len);
+        return 0;
+    }
+
     return data_len;
 }
 
@@ -67,6 +73,10 @@ fn parse_data(mut stream: &TcpStream) -> HashMap<Vec<u8>, String> {
 
         // get len for key data
         let key_len = get_len(&stream);
+        if key_len == 0 {
+            println!("get_len error");
+            break
+        };
 
         // buffer to read data of length given by len_buf
         let mut key_buf = vec![0; key_len];

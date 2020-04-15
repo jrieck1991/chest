@@ -5,11 +5,13 @@ use std::net::TcpStream;
 pub struct Client {}
 
 impl Client {
+
     pub fn new() -> Client {
         Client {}
     }
 
-    pub fn send(self: &Self, data: String, addr: String) -> Result<(), Error> {
+    pub fn send(self: &Self, addr: String, data_map: HashMap<Vec<u8>, String>) -> Result<(), Error> {
+
         // connect to server
         let mut stream = match TcpStream::connect(addr) {
             Ok(stream) => stream,

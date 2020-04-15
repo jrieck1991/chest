@@ -9,5 +9,5 @@ edition = "2018"
 [dependencies]
 
 [[bin]]
-name = "node"
-path = "src/main.rs"
+name = "server"
+path = "src/server.rs"
