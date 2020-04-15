@@ -1,5 +1,6 @@
 use std::io::{Error, Write};
 use std::net::TcpStream;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Client {}
@@ -10,7 +11,7 @@ impl Client {
         Client {}
     }
 
-    pub fn send(self: &Self, addr: String, data_map: HashMap<Vec<u8>, String>) -> Result<(), Error> {
+    pub fn send(self: &Self, addr: String, data_map: HashMap<String, String>) -> Result<(), Error> {
 
         // connect to server
         let mut stream = match TcpStream::connect(addr) {
@@ -24,18 +25,18 @@ impl Client {
         // tag == u32 48
         buf.push(b"0"[0]);
 
-        // data length
-        let data_len = data.as_bytes().len();
+        //// data length
+        //let data_len = data_map.as_bytes().len();
 
-        // add data length bytes
-        for (_i, x) in data_len.to_be_bytes().iter().enumerate() {
-            buf.push(*x);
-        }
+        //// add data length bytes
+        //for (_i, x) in data_len.to_be_bytes().iter().enumerate() {
+        //    buf.push(*x);
+        //}
 
-        // add data
-        for (_i, x) in data.as_bytes().into_iter().enumerate() {
-            buf.push(*x);
-        }
+        //// add data
+        //for (_i, x) in data_map.as_bytes().into_iter().enumerate() {
+        //    buf.push(*x);
+        //}
 
         // write buffer to tcp connection
         let _n = match stream.write(&buf[..]) {
@@ -45,6 +46,16 @@ impl Client {
 
         Ok(())
     }
+}
+
+fn main() {
+
+    let c = Client::new();
+
+    let res = match c.send(String::from("localhost:6000"), HashMap::new()) {
+        Ok(res) => println!("send successful"),
+        Err(e) => println!("error sending: {}", e),
+    };
 }
 
 mod tests {
